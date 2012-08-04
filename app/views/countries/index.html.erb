@@ -3,10 +3,10 @@
     <table>
       <tr>
         <th>Visited</th>
-        <td><%= Country.visited.count %></td>
+        <td><%= @countries.visited.count %></td>
       </tr><tr>
         <th>Not Visited</th>
-        <td><%= Country.not_visited.count %></td>
+        <td><%= @countries.not_visited.count %></td>
       </tr>
     </table>
   </div>
@@ -19,7 +19,6 @@
       <th>Code</th>
       <th>Status</th>
       <th></th>
-      <th></th>
     </tr>
 
   <% @countries.each do |country| %>
@@ -28,7 +27,6 @@
       <td><%= country.code %></td>
       <td><%= country.visited? ? 'Visited' : 'Not Visited' %></td>
       <td><%= link_to 'Show', country %></td>
-      <td><%= link_to 'Edit', edit_country_path(country) %></td>
     </tr>
   <% end %>
   </table>

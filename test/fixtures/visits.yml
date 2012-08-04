@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  country_id: CodeTwo
+  user_id: 1
+
+two:
+  id: 2
+  country_id: CodeOne
+  user_id: 2

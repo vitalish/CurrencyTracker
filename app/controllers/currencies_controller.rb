@@ -2,7 +2,7 @@ class CurrenciesController < ApplicationController
   # GET /currencies
   # GET /currencies.xml
   def index
-    @currencies = Currency.all
+    @currencies = Currency.for_user(current_user)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class CurrenciesController < ApplicationController
   # GET /currencies/1
   # GET /currencies/1.xml
   def show
-    @currency = Currency.find(params[:id])
+    @currency = Currency.for_user(current_user).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb

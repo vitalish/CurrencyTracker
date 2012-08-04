@@ -1,10 +1,13 @@
 require 'test_helper'
 
 class CountriesControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
   should_not_respond_to_actions :new => :get, :destroy => :get
 
   setup do
     @country = countries(:one)
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in users(:one)
   end
 
   test "should get index" do
@@ -15,7 +18,7 @@ class CountriesControllerTest < ActionController::TestCase
 
   test "should create country" do
     assert_difference('Country.count') do
-      post :create, :country => @country.attributes.merge({ :code => Time.now.to_s })
+      post :create, :country => { :name => 'NewCountry', :code => 'NewCode' }
     end
 
     assert_redirected_to country_path(assigns(:country))
@@ -27,7 +30,7 @@ class CountriesControllerTest < ActionController::TestCase
     end
 
     assert !assigns[:country].errors[:code].empty?
-  end  
+  end
 
   test "should show country" do
     get :show, :id => @country.to_param
@@ -42,5 +45,24 @@ class CountriesControllerTest < ActionController::TestCase
   test "should update country" do
     put :update, :id => @country.to_param, :country => @country.attributes
     assert_redirected_to country_path(assigns(:country))
+  end
+
+  test "should create visit" do
+    assert_difference('Visit.count', 1) do
+      post :visit, :id => @country.to_param
+    end
+
+    assert_redirected_to country_path(assigns(:country))
+    assert_equal 'Country was successfully visited.', flash[:notice]
+  end
+
+  test "should not create visit when already visited" do
+    @country = countries(:two)
+    assert_no_difference('Visit.count') do
+      post :visit, :id => @country.to_param
+    end
+
+    assert_redirected_to country_path(assigns(:country))
+    assert_equal 'Country has been already visited.', flash[:notice]
   end
 end

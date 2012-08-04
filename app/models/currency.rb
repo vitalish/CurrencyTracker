@@ -8,15 +8,18 @@ class Currency < ActiveRecord::Base
 
   belongs_to :country
 
-  def self.collected
-    all.select {|currency| currency.collected? }
-  end
-
-  def self.not_collected
-    all.reject {|currency| currency.collected? }
-  end
+  scope :collected, where('visits.id IS NOT NULL')
+  scope :not_collected, where('visits.id IS NULL')
 
   def collected?
-    country.nil? ? false : country.visited?
+    if respond_to? :visit_id
+      !!visit_id
+    else
+      false
+    end
+  end
+
+  def self.for_user(user)
+    joins(:country).joins("LEFT OUTER JOIN visits ON visits.country_id = countries.code AND visits.user_id = #{user.id}").select("currencies.*, visits.id as visit_id")
   end
 end
