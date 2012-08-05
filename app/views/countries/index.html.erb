@@ -12,22 +12,30 @@
   </div>
 
   <h1>Countries</h1>
+  <div class="smart_table">
+    <%= form_tag visit_all_countries_path(@country) do %>
+      <%= text_field_tag :filter, nil, :class => 'filter' %>
+      <button name="button" type="button" class="select_all">Select All</button>
+      <%= submit_tag "Visit Selected" %>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
 
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Code</th>
-      <th>Status</th>
-      <th></th>
-    </tr>
-
-  <% @countries.each do |country| %>
-    <tr>
-      <td><%= country.name %></td>
-      <td><%= country.code %></td>
-      <td><%= country.visited? ? 'Visited' : 'Not Visited' %></td>
-      <td><%= link_to 'Show', country %></td>
-    </tr>
-  <% end %>
-  </table>
+      <% @countries.each do |country| %>
+        <tr>
+          <td class='name'><%= country.name %></td>
+          <td><%= country.code %></td>
+          <td class='status'><%= country.visited? ? 'Visited' : 'Not Visited' %></td>
+          <td><%= link_to 'Show', country %></td>
+          <td><%= check_box_tag 'countries[]', country.code, false, :disabled => country.visited?, :class => "select_row" %></td>
+        </tr>
+      <% end %>
+      </table>
+    <% end %>
+  </div>
 </section>

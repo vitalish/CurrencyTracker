@@ -3,7 +3,7 @@
 <head>
   <title>CurrencyTracker</title>
   <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag 'extensions', 'jquery-1.5.2.min', 'view_controller', 'simple_pie_chart' %>
+  <%= javascript_include_tag 'extensions', 'jquery-1.5.2.min', 'view_controller', 'simple_pie_chart', 'smart_table' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -12,8 +12,11 @@
   <h1>CurrencyTracker</h1>
   <nav>
     <ul>
-      <li><%= link_to "Currencies", currencies_path %></li>
-      <li><%= link_to "Countries", countries_path %></li>
+      <% if current_user %>
+        <li><%= link_to "Currencies", currencies_path %></li>
+        <li><%= link_to "Countries", countries_path %></li>
+        <li><%= link_to "Logout", destroy_user_session_path %></li>
+      <% end %>
     </ul>
   </nav>
 </header>

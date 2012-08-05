@@ -65,4 +65,12 @@ class CountriesControllerTest < ActionController::TestCase
     assert_redirected_to country_path(assigns(:country))
     assert_equal 'Country has been already visited.', flash[:notice]
   end
+
+  test "should create visits for only for countries that wasn't visited" do
+    assert_difference('Visit.count', 2) do
+      post :visit_all, :countries => ['CodeThree', 'CodeTwo', 'CodeOne']
+    end
+
+    assert_redirected_to countries_path
+  end
 end

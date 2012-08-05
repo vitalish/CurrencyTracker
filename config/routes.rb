@@ -1,10 +1,11 @@
 CurrencyTracker::Application.routes.draw do
   devise_for :users
 
-  root :to => "currencies#index"
+  root :to => "countries#index"
 
   resources :countries, :except => [:new, :destroy] do
     post 'visit', :on => :member
+    post 'visit_all', :on => :collection
   end
 
   resources :currencies, :only => [:index, :show]

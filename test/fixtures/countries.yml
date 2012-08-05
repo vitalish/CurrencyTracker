@@ -7,3 +7,7 @@ one:
 two:
   name: NameTwo
   code: CodeTwo
+
+three:
+  name: NameThree
+  code: CodeThree

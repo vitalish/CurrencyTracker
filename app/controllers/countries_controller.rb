@@ -61,9 +61,19 @@ class CountriesController < ApplicationController
     if @country.visited?
       redirect_to(@country, :notice => 'Country has been already visited.')
     else
-      current_user.visits.create(:country_id => @country.code)
+      current_user.visit_country(@country)
       redirect_to(@country, :notice => 'Country was successfully visited.')
     end
+  end
+
+  # POST /countries/visit_all
+  def visit_all
+    if params[:countries].present?
+      Country.for_user(current_user).not_visited.where(:code => params[:countries]).each do |country|
+        current_user.visit_country(country)
+      end
+    end
+    redirect_to countries_path
   end
 
   private

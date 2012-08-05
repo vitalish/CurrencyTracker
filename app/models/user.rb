@@ -8,4 +8,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
   has_many :visits
   has_many :countries, :through => :visits
+
+  def visit_country(country)
+    visits.create(:country_id => country.code)
+  end
 end
