@@ -19,11 +19,17 @@ I developed under 1.8.7-p358 using rbenv and Bundler version 1.1.4.
 Enhancements
 ------------
 This is what I managed to accomplish within 6 hours:
-1. Multi-­tenant app
+
+Multi-­tenant app
+----------------
+
 * Added devise gem to support user authentication.
 * Added Visit model to indicate user visiting countries.
 * To select countries/currencies that visited/collected I used custom join which is not very crucial for such small project but allows to reduce array iterations in ruby.
-2. Additional Table Features
+
+Additional Table Features
+-------------------------
+
 * Added ability for user to Visit multiple countries.
 * Added unobtrusive javascript to allow submitting visits without page reload.
 * Reload chart on new visits. I didn't find a quick way to reuse SimplePieChart so I just altered the url for image with the help of regexp.
