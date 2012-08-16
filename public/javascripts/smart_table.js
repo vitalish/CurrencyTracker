@@ -20,13 +20,15 @@ var SmartTable = {
     $('.select_all', self.root).click(function(){
       self.select_visible();
     });
+    self.init_line_chart();
   },
 
   form_submit_handler: function() {
     var self = this;
     if (self.has_checked_rows()) {
-      $.post(self.url, self.form.serialize(), function(data) {
-          self.success();
+      $.post(self.url + '.json', self.form.serialize(), function(data) {
+        self.add_line_chart_series(data);
+        self.success();
       });
     }
   },
@@ -75,6 +77,58 @@ var SmartTable = {
           newsrc = src.replace(string_to_replace, new_value);
           chart.attr('src', newsrc);
         }
+  },
+
+  init_line_chart: function() {
+    var self = this;
+    self.chart_data = [];
+    self.draw_line_chart();
+    $.getJSON('/countries/progress', function(data) {
+      self.add_line_chart_series(data);
+    });
+  },
+
+  add_line_chart_series: function(visits) {
+    var self = this,
+        series = self.chart.series[0],
+        data_count = self.chart_data.length;
+
+    $.each(visits, function(index, el) {
+      self.chart_data.push([el.visit.date, data_count + index + 1 ]);
+    });
+    series.setData(self.chart_data);
+  },
+
+  draw_line_chart: function() {
+    this.chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'visits_line_chart',
+        type: 'spline'
+      },
+      title: {
+        text: 'Progress'
+      },
+      xAxis: {
+        type: 'datetime'
+      },
+      yAxis: {
+        title: {
+          text: 'Count'
+        },
+        allowDecimals: false,
+        min: 0
+      },
+      series: [{
+        name: 'Countries Visited',
+        data: []
+      }],
+      tooltip: {
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            Highcharts.dateFormat('%e %b', this.x) +': '+ this.y + ' Visited';
+        }
+      }
+    });
   },
 
   hide_all: function() {

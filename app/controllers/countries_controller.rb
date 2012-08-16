@@ -68,12 +68,21 @@ class CountriesController < ApplicationController
 
   # POST /countries/visit_all
   def visit_all
+    visits = []
     if params[:countries].present?
       Country.for_user(current_user).not_visited.where(:code => params[:countries]).each do |country|
-        current_user.visit_country(country)
+        visits << current_user.visit_country(country)
       end
     end
-    redirect_to countries_path
+    respond_to do |format|
+      format.html { redirect_to countries_path }
+      format.json { render :json => visits.to_json(:methods => :date, :only => [:date]) }
+    end
+  end
+
+  # GET /countries/progress
+  def progress
+    render :json => current_user.visits.to_json(:methods => :date, :only => [:date])
   end
 
   private

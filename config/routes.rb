@@ -6,6 +6,7 @@ CurrencyTracker::Application.routes.draw do
   resources :countries, :except => [:new, :destroy] do
     post 'visit', :on => :member
     post 'visit_all', :on => :collection
+    get 'progress', :on => :collection
   end
 
   resources :currencies, :only => [:index, :show]
