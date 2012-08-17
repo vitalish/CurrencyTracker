@@ -74,6 +74,26 @@ class CountriesControllerTest < ActionController::TestCase
     assert_redirected_to countries_path
   end
 
+  test "should delete visit for visited countries" do
+    @country = countries(:two)
+    assert_difference('Visit.count', -1) do
+      delete :unvisit, :id => @country.to_param
+    end
+
+    assert_redirected_to country_path(assigns(:country))
+    assert_equal 'Country visit was successfully deleted.', flash[:notice]
+  end
+
+  test "should not delete visit for not visited countries" do
+    @country = countries(:one)
+    assert_no_difference('Visit.count') do
+      delete :unvisit, :id => @country.to_param
+    end
+
+    assert_redirected_to country_path(assigns(:country))
+    assert_equal 'Country has not been visited yet.', flash[:notice]
+  end
+
   test "should create visits only for countries that wasn't visited when json" do
     assert_difference('Visit.count', 2) do
       post :visit_all, :countries => ['CodeThree', 'CodeTwo', 'CodeOne'], :format => :json
@@ -85,7 +105,7 @@ class CountriesControllerTest < ActionController::TestCase
   end
 
   test "should get country visits progress" do
-    get :progress, :id => @country.to_param
+    get :progress
     assert_response :success
     assert_equal users(:one).visits.to_json(:methods => :date, :only => [:date]), @response.body
   end

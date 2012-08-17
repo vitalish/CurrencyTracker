@@ -31,12 +31,14 @@ Feature: Manage countries
       |CountryFour|c4|Visited|
       |CountryFive|c5|Not Visited|
 
-  Scenario: Visit Country
+  Scenario: Visit/Unvisit Country
     Given I am logged in user
     And I am on a country page
     And I should see "Status: Not Visited"
     When I press "Visit"
     Then I should see "Status: Visited"
+    Then I press "Delete Visit"
+    And I should see "Status: Not Visited"
 
   Scenario: Visiting Country adds Collection
     Given the following countries exist:

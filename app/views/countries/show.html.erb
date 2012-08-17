@@ -25,9 +25,14 @@
 </p>
 
 <p>
-  <%= form_tag visit_country_path(@country) do %>
-    <%= submit_tag "Visit" %>
-    <%= submit_tag "Visit" %>
+  <% if @country.visited? %>
+    <%= form_tag unvisit_country_path(@country), :method => :delete do %>
+      <%= submit_tag "Delete Visit" %>
+    <% end %>
+  <% else %>
+    <%= form_tag visit_country_path(@country) do %>
+      <%= submit_tag "Visit" %>
+    <% end %>
   <% end %>
 </p>
 <%= link_to 'Back', countries_path %>

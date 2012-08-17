@@ -1,5 +1,6 @@
 class CurrenciesController < ApplicationController
   before_filter :fetch_currencies_for_user, :only => [:index, :collect_all, :progress]
+  before_filter :fetch_currency, :only => [:show, :collect, :delete_collection]
   # GET /currencies
   # GET /currencies.xml
   def index
@@ -12,11 +13,29 @@ class CurrenciesController < ApplicationController
   # GET /currencies/1
   # GET /currencies/1.xml
   def show
-    @currency = Currency.for_user(current_user).find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @currency }
+    end
+  end
+
+  # POST /currencies/1/collect
+  def collect
+    if @currency.collected?
+      redirect_to(@currency, :notice => 'Currency has been already colleted.')
+    else
+      current_user.visit_country(@currency.country)
+      redirect_to(@currency, :notice => 'Currency was successfully collected.')
+    end
+  end
+
+  # DELETE /currencies/1/delete_collection
+  def delete_collection
+    if @currency.collected?
+      redirect_to(@currency, :notice => 'Currency collection was successfully deleted.')
+      current_user.unvisit_country(@currency.country)
+    else
+      redirect_to(@currency, :notice => 'Currency has not been collected yet.')
     end
   end
 
@@ -44,6 +63,10 @@ class CurrenciesController < ApplicationController
 
     def fetch_currencies_for_user
       @currencies = Currency.for_user(current_user)
+    end
+
+    def fetch_currency
+      @currency = Currency.for_user(current_user).find(params[:id])
     end
 
 end

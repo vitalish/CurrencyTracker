@@ -12,4 +12,10 @@ class User < ActiveRecord::Base
   def visit_country(country)
     visits.create(:country_id => country.code)
   end
+
+  def unvisit_country(country)
+    visits.where(:country_id => country.code).each do |visit|
+      visit.destroy
+    end
+  end
 end

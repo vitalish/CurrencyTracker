@@ -20,4 +20,16 @@
   <%= @currency.country.nil? ? 'None' : link_to(@currency.country.name, @currency.country) %>
 </p>
 
+<p>
+  <% if @currency.collected? %>
+    <%= form_tag delete_collection_currency_path(@currency), :method => :delete do %>
+      <%= submit_tag "Delete Collection" %>
+    <% end %>
+  <% else %>
+    <%= form_tag collect_currency_path(@currency) do %>
+      <%= submit_tag "Collect" %>
+    <% end %>
+  <% end %>
+</p>
+
 <%= link_to 'Back', currencies_path %>

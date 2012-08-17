@@ -1,6 +1,6 @@
 class CountriesController < ApplicationController
   before_filter :fetch_country, :only => [:show, :edit, :update]
-  before_filter :fetch_country_for_user, :only => [:show, :visit]
+  before_filter :fetch_country_for_user, :only => [:show, :visit, :unvisit]
 
   # GET /countries
   # GET /countries.xml
@@ -63,6 +63,16 @@ class CountriesController < ApplicationController
     else
       current_user.visit_country(@country)
       redirect_to(@country, :notice => 'Country was successfully visited.')
+    end
+  end
+
+  # DELETE /countries/1/unvisit
+  def unvisit
+    if @country.visited?
+      redirect_to(@country, :notice => 'Country visit was successfully deleted.')
+      current_user.unvisit_country(@country)
+    else
+      redirect_to(@country, :notice => 'Country has not been visited yet.')
     end
   end
 
