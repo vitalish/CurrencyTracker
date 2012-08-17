@@ -1,12 +1,13 @@
-// var SmartTable = {};
-
-// SmartTable.initialize = function(root_element) { return new ViewController(root_element, {
 var SmartTable = {
-  initialize: function(root) {
+  initialize: function(root, chart) {
     var self = this;
     self.root= root;
     self.form = $('form', self.root);
     self.url = self.form.attr('action');
+    self.chart_cotainer = $(chart)[0];
+    self.progress_url = $(self.chart_cotainer).data('progress_url');
+    self.series_name = $(self.chart_cotainer).data('series_name');
+    self.point_name = $(self.chart_cotainer).data('point_name');
 
     self.form.submit(function() {
       self.form_submit_handler();
@@ -27,7 +28,7 @@ var SmartTable = {
     var self = this;
     if (self.has_checked_rows()) {
       $.post(self.url + '.json', self.form.serialize(), function(data) {
-        self.add_line_chart_series(data);
+        self.add_progress_to_line_chart(data);
         self.success();
       });
     }
@@ -46,7 +47,7 @@ var SmartTable = {
   },
 
   change_status: function(row) {
-    $('.status', row).html('Visited')
+    $('.status', row).html(this.point_name)
   },
 
   success: function() {
@@ -83,26 +84,27 @@ var SmartTable = {
     var self = this;
     self.chart_data = [];
     self.draw_line_chart();
-    $.getJSON('/countries/progress', function(data) {
-      self.add_line_chart_series(data);
+    $.getJSON(self.progress_url, function(data) {
+      self.add_progress_to_line_chart(data);
     });
   },
 
-  add_line_chart_series: function(visits) {
+  add_progress_to_line_chart: function(progress) {
     var self = this,
         series = self.chart.series[0],
         data_count = self.chart_data.length;
 
-    $.each(visits, function(index, el) {
-      self.chart_data.push([el.visit.date, data_count + index + 1 ]);
+    $.each(progress, function(index, el) {
+      self.chart_data.push([el.date, data_count + index + 1 ]);
     });
     series.setData(self.chart_data);
   },
 
   draw_line_chart: function() {
-    this.chart = new Highcharts.Chart({
+    var self = this;
+    self.chart = new Highcharts.Chart({
       chart: {
-        renderTo: 'visits_line_chart',
+        renderTo: self.chart_cotainer,
         type: 'spline'
       },
       title: {
@@ -119,13 +121,13 @@ var SmartTable = {
         min: 0
       },
       series: [{
-        name: 'Countries Visited',
+        name: self.series_name,
         data: []
       }],
       tooltip: {
         formatter: function() {
           return '<b>'+ this.series.name +'</b><br/>'+
-            Highcharts.dateFormat('%e %b', this.x) +': '+ this.y + ' Visited';
+            Highcharts.dateFormat('%e %b', this.x) +': '+ this.y + ' ' + self.point_name;
         }
       }
     });
@@ -159,8 +161,10 @@ var SmartTable = {
     });
   }
 
-}//)};
+};
 
 $(document).ready(function() {
-  SmartTable.initialize($('.smart_table'));
+  $('.smart_table').each(function() {
+    SmartTable.initialize(this, '#line_chart');
+  });
 })

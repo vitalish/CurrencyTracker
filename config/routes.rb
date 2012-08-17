@@ -9,7 +9,10 @@ CurrencyTracker::Application.routes.draw do
     get 'progress', :on => :collection
   end
 
-  resources :currencies, :only => [:index, :show]
+  resources :currencies, :only => [:index, :show] do
+    post 'collect_all', :on => :collection
+    get 'progress', :on => :collection
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

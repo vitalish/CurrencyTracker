@@ -10,6 +10,7 @@ class Currency < ActiveRecord::Base
 
   scope :collected, where('visits.id IS NOT NULL')
   scope :not_collected, where('visits.id IS NULL')
+  scope :order_by_visit_date, order("visit_date")
 
   def collected?
     if respond_to? :visit_id
@@ -19,7 +20,11 @@ class Currency < ActiveRecord::Base
     end
   end
 
+  def date
+    Time.parse(visit_date).to_i * 1000
+  end
+
   def self.for_user(user)
-    joins(:country).joins("LEFT OUTER JOIN visits ON visits.country_id = countries.code AND visits.user_id = #{user.id}").select("currencies.*, visits.id as visit_id")
+    joins(:country).joins("LEFT OUTER JOIN visits ON visits.country_id = countries.code AND visits.user_id = #{user.id}").select("currencies.*, visits.id as visit_id, visits.created_at as visit_date")
   end
 end

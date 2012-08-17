@@ -1,5 +1,5 @@
 <section>
-  <div id="visits_line_chart"></div>
+  <div id="line_chart" data-progress_url="<%= progress_countries_path %>" data-series_name="Countires Visited" data-point_name="Visited"></div>
   <div id="visited_countries_chart" class="simple_pie_chart" width='300px' height='100px'>
     <table>
       <tr>
@@ -13,9 +13,8 @@
   </div>
   <h1>Countries</h1>
   <div class="smart_table">
-    <%= form_tag visit_all_countries_path(@country) do %>
-      <%= text_field_tag :filter, nil, :class => 'filter' %>
-      <button name="button" type="button" class="select_all">Select All</button>
+    <%= form_tag visit_all_countries_path do %>
+      <%= render :partial => '/shared/smart_table_controls' %>
       <%= submit_tag "Visit Selected" %>
       <table>
         <tr>

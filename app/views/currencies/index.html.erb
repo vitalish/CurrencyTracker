@@ -1,4 +1,5 @@
 <section>
+  <div id="line_chart" data-progress_url="<%= progress_currencies_path %>" data-series_name="Currencies Collected" data-point_name="Collected"></div>
   <div id="collected_currencies_chart" class="simple_pie_chart" width='300px' height='100px'>
     <table>
       <tr>
@@ -12,22 +13,29 @@
   </div>
 
   <h1>Currencies</h1>
+  <div class="smart_table">
+    <%= form_tag collect_all_currencies_path do %>
+      <%= render :partial => '/shared/smart_table_controls' %>
+      <%= submit_tag "Collect Selected" %>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
 
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Code</th>
-      <th>Status</th>
-      <th></th>
-    </tr>
-
-  <% @currencies.each do |currency| %>
-    <tr>
-      <td><%= currency.name %></td>
-      <td><%= currency.code %></td>
-      <td><%= currency.collected? ? 'Collected' : 'Not Collected' %></td>
-      <td><%= link_to 'Show', currency %></td>
-    </tr>
-  <% end %>
-  </table>
+      <% @currencies.each do |currency| %>
+        <tr>
+          <td class='name'><%= currency.name %></td>
+          <td><%= currency.code %></td>
+          <td class='status'><%= currency.collected? ? 'Collected' : 'Not Collected' %></td>
+          <td><%= link_to 'Show', currency %></td>
+          <td><%= check_box_tag 'currencies[]', currency.code, false, :disabled => currency.collected?, :class => "select_row" %></td>
+        </tr>
+      <% end %>
+      </table>
+    <% end %>
+  </div>
 </section>
