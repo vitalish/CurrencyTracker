@@ -116,3 +116,28 @@ Feature: Manage countries
       |Czech Republic|c4|Visited|
       |CountryFive|c5|Not Visited|
 
+  @javascript
+  Scenario: Filter clears selected rows that do not match
+    Given the following countries exist:
+      |name|code|
+      |Chad|c1|
+      |China|c2|
+      |CountryThree|c3|
+      |Czech Republic|c4|
+      |CountryFive|c5|
+    And the following users exist:
+      |email|password|
+      |user1@example.com|123456|
+    And I am logged in user with email "user1@example.com" and password "123456"
+    And I am on the countries page
+    And I press "Select All"
+    When I fill in "filter" with "ch"
+    And I press "Visit Selected"
+    And I am on the countries page
+    Then I should see the following table:
+      |Name|Code|Status|
+      |Chad|c1|Visited|
+      |China|c2|Visited|
+      |CountryThree|c3|Not Visited|
+      |Czech Republic|c4|Visited|
+      |CountryFive|c5|Not Visited|
