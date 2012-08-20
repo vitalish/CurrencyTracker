@@ -149,13 +149,15 @@ var SmartTable = {
   filter: function(query) {
     var lcquery = query.toLowerCase();
     $('tr',this.root).each(function(index) {
-      var name_tag = $('td.name', $(this));
+      var name_tag = $('td.name', $(this)),
+          checkbox = $('.select_row:checked', $(this));
       if (name_tag.size() > 0) {
         var name = name_tag.html().toLowerCase();
         if(name.search(lcquery)!= -1) {
           $(this).show();
         } else {
           $(this).hide();
+          checkbox.attr('checked', false);
         }
       }
     });
